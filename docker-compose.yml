@@ -1,34 +1,26 @@
 services:
   mongo:
     image: mongo:6
-    container_name: mongo
     restart: always
     volumes:
       - mongo_data:/data/db
 
   backend:
-    build: ./backend
-    container_name: backend
+    image: anurag1711/mean-backend:latest
     restart: always
     environment:
       MONGO_URL: mongodb://mongo:27017/dd_db
     depends_on:
-      mongo:
-        condition: service_started
-    ports:
-      - "8080:8080"
+      - mongo
 
   frontend:
-    build: ./frontend
-    container_name: frontend
+    image: anurag1711/mean-frontend:latest
     restart: always
     depends_on:
-      backend:
-        condition: service_started
+      - backend
 
   nginx:
     image: nginx:alpine
-    container_name: nginx
     restart: always
     ports:
       - "80:80"
